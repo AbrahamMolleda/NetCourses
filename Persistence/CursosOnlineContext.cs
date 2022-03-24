@@ -19,7 +19,7 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<CursoInstructor>().HasKey(ci => new { ci.InstrcutorId, ci.CursoId });
+            modelBuilder.Entity<CursoInstructor>().HasKey(ci => new { ci.InstructorId, ci.CursoId });
         }
 
         public DbSet<Curso> Curso { get; set; }

@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.Cursos
 {
-    public class CursoInstructor
+    public class CursoInstructorDto
     {
         public Guid CursoId { get; set; }
-        public Curso Curso { get; set; }
         public Guid InstructorId { get; set; }
-        public Instructor Instructor { get; set; }
     }
 }

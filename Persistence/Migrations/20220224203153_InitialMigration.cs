@@ -229,12 +229,11 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     CursoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InstrcutorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InstructorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    InstructorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CursoInstructor", x => new { x.InstrcutorId, x.CursoId });
+                    table.PrimaryKey("PK_CursoInstructor", x => new { x.InstructorId, x.CursoId });
                     table.ForeignKey(
                         name: "FK_CursoInstructor_Curso_CursoId",
                         column: x => x.CursoId,
@@ -246,7 +245,7 @@ namespace Persistence.Migrations
                         column: x => x.InstructorId,
                         principalTable: "Instructor",
                         principalColumn: "InstructorId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -297,11 +296,6 @@ namespace Persistence.Migrations
                 name: "IX_CursoInstructor_CursoId",
                 table: "CursoInstructor",
                 column: "CursoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CursoInstructor_InstructorId",
-                table: "CursoInstructor",
-                column: "InstructorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Precio_CursoId",

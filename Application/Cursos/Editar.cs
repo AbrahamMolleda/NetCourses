@@ -1,4 +1,5 @@
 ﻿using Application.ManejadorError;
+using Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Persistence;
@@ -16,10 +17,13 @@ namespace Application.Cursos
     {
         public class Ejecuta : IRequest
         {
-            public int CursoId { get; set; }
+            public Guid CursoId { get; set; }
             public string Titulo { get; set; }
             public string Descripcion { get; set; }
             public DateTime? FechaPublicacion { get; set; }
+            public List<Guid> ListaInstructor { get; set; }
+            public decimal? Precio { get; set; }
+            public decimal? Promocion { get; set; }
         }
 
         public class EjecutaValidacion : AbstractValidator<Ejecuta>
@@ -49,6 +53,47 @@ namespace Application.Cursos
                 curso.Titulo = request.Titulo ?? curso.Titulo;
                 curso.Descripcion = request.Descripcion ?? curso.Descripcion;
                 curso.FechaPublicacion = request.FechaPublicacion ?? curso.FechaPublicacion;
+
+                // Actualizar Precio
+                var precioEntidad = _context.Precio.Where(x => x.CursoId == curso.CursoId).FirstOrDefault();
+                if(precioEntidad != null)
+                {
+                    precioEntidad.Promocion = request.Promocion ?? precioEntidad.Promocion;
+                    precioEntidad.PrecioActual = request.Precio ?? precioEntidad.PrecioActual;
+                }
+                else
+                {
+                    precioEntidad = new Precio
+                    {
+                        PrecioId = Guid.NewGuid(),
+                        PrecioActual = request.Precio ?? 0,
+                        Promocion = request.Promocion ?? 0,
+                        CursoId = curso.CursoId
+                    };
+                    await _context.Precio.AddAsync(precioEntidad);
+                }
+
+                if (request.ListaInstructor != null)
+                {
+                    if (request.ListaInstructor.Count > 0)
+                    {
+                        var instructoresBd = _context.CursoInstructor.Where(x => x.CursoId == request.CursoId);
+                        foreach (var instructor in instructoresBd)
+                        {
+                            _context.CursoInstructor.Remove(instructor);
+                        }
+
+                        foreach (var nuevoInstructorId in request.ListaInstructor)
+                        {
+                            var nuevoInstructor = new CursoInstructor
+                            {
+                                CursoId = request.CursoId,
+                                InstructorId = nuevoInstructorId
+                            };
+                            await _context.CursoInstructor.AddAsync(nuevoInstructor);
+                        }
+                    }
+                }
 
                 var resultado = await _context.SaveChangesAsync();
                 if (resultado > 0)

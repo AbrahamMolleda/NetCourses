@@ -10,7 +10,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(CursosOnlineContext))]
-    [Migration("20220223070846_InitialMigration")]
+    [Migration("20220224203153_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,20 +71,15 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.CursoInstructor", b =>
                 {
-                    b.Property<Guid>("InstrcutorId")
+                    b.Property<Guid>("InstructorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CursoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("InstructorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("InstrcutorId", "CursoId");
+                    b.HasKey("InstructorId", "CursoId");
 
                     b.HasIndex("CursoId");
-
-                    b.HasIndex("InstructorId");
 
                     b.ToTable("CursoInstructor");
                 });
@@ -355,7 +350,9 @@ namespace Persistence.Migrations
 
                     b.HasOne("Domain.Entities.Instructor", "Instructor")
                         .WithMany("CursoLink")
-                        .HasForeignKey("InstructorId");
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Curso");
 

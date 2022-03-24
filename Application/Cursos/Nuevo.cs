@@ -20,6 +20,9 @@ namespace Application.Cursos
             public string Titulo { get; set; }
             public string Descripcion { get; set; }
             public DateTime? FechaPublicacion { get; set; }
+            public List<Guid> ListaInstructor { get; set; }
+            public decimal Precio { get; set; }
+            public decimal Promocion { get; set; }
         }
 
         public class EjecutaValidacion : AbstractValidator<Ejecuta>
@@ -41,13 +44,41 @@ namespace Application.Cursos
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
+                Guid _cursoId = Guid.NewGuid();
                 var curso = new Curso
                 {
+                    CursoId = _cursoId,
                     Titulo = request.Titulo,
                     Descripcion = request.Descripcion,
                     FechaPublicacion = request.FechaPublicacion
                 };
                 await _context.Curso.AddAsync(curso);
+
+                // Logica de Instructor
+                if(request.ListaInstructor != null)
+                {
+                    foreach(var id in request.ListaInstructor)
+                    {
+                        var cursoInstructor = new CursoInstructor
+                        {
+                            CursoId = _cursoId,
+                            InstructorId = id
+                        };
+                        await _context.CursoInstructor.AddAsync(cursoInstructor);
+                    }
+                }
+
+                // Logica de precio
+                var precioEntidad = new Precio
+                {
+                    CursoId = _cursoId,
+                    PrecioActual = request.Precio,
+                    Promocion = request.Promocion,
+                    PrecioId = Guid.NewGuid()
+                };
+
+                await _context.Precio.AddAsync(precioEntidad);
+
                 var valor = await _context.SaveChangesAsync();
                 if (valor > 0)
                     return Unit.Value;

@@ -69,20 +69,15 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.CursoInstructor", b =>
                 {
-                    b.Property<Guid>("InstrcutorId")
+                    b.Property<Guid>("InstructorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CursoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("InstructorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("InstrcutorId", "CursoId");
+                    b.HasKey("InstructorId", "CursoId");
 
                     b.HasIndex("CursoId");
-
-                    b.HasIndex("InstructorId");
 
                     b.ToTable("CursoInstructor");
                 });
@@ -353,7 +348,9 @@ namespace Persistence.Migrations
 
                     b.HasOne("Domain.Entities.Instructor", "Instructor")
                         .WithMany("CursoLink")
-                        .HasForeignKey("InstructorId");
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Curso");
 

@@ -15,7 +15,7 @@ namespace Application.Cursos
     {
         public class Ejecuta : IRequest
         {
-            public int Id { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -28,9 +28,26 @@ namespace Application.Cursos
 
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
+                var instructoresDb = _context.CursoInstructor.Where(i => i.CursoId == request.Id);
+                foreach(var instructor in instructoresDb)
+                {
+                    _context.CursoInstructor.Remove(instructor);
+                }
+
+                var comentariosDb = _context.Comentario.Where(x => x.CursoId == request.Id);
+                foreach (var cmt in instructoresDb)
+                {
+                    _context.CursoInstructor.Remove(cmt);
+                }
+
+                var precioDb = _context.Precio.Where(x => x.CursoId == request.Id).FirstOrDefault();
+                if(precioDb != null)
+                {
+                    _context.Precio.Remove(precioDb);
+                }
+
                 var curso = await _context.Curso.FindAsync(request.Id);
                 if (curso == null)
-                    //throw new Exception("No se puede eliminar el curso");
                     throw new ManejadorExcepcion(HttpStatusCode.NotFound, new { mensaje = "no se encontro el curso" });
 
                 _context.Remove(curso);
