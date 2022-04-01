@@ -29,7 +29,8 @@ namespace WebAPI
                     var context = services.GetRequiredService<CursosOnlineContext>();
                     context.Database.Migrate();
                     DataPrueba.InsertarDataAsync(context, userManager).Wait();
-                }catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     var logging = services.GetRequiredService<ILogger<Program>>();
                     logging.LogError(ex, "Ocurrio un error en la migracion");
