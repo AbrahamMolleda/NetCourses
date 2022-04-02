@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace Application.Instructores
 {
-    public class Nuevo
+    public class Editar
     {
         public class Ejecuta : IRequest
         {
+            public Guid InstructorId { get; set; }
             public string Nombre { get; set; }
             public string Apellido { get; set; }
             public string Titulo { get; set; }
@@ -38,14 +39,14 @@ namespace Application.Instructores
             }
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
-                var resultado = await _instructorRepository.Nuevo(request.Nombre, request.Apellido, request.Titulo);
+                var resultado = await _instructorRepository.Actualiza(request.InstructorId, request.Nombre, request.Apellido, request.Titulo);
+
                 if(resultado > 0)
                 {
                     return Unit.Value;
                 }
-                throw new Exception("No se pudo insertar el instructor");
+                throw new Exception("No se pudo actualizar la data del instructor");
             }
         }
     }
-
 }

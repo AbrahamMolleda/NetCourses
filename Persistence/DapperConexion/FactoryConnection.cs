@@ -1,11 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Options;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace Persistence.DapperConexion
 {

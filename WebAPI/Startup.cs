@@ -76,7 +76,7 @@ namespace WebAPI
             services.AddScoped<IUsuarioSesion, UsuarioSesion>();
             services.AddAutoMapper(typeof(Consulta.Manejador));
             services.AddTransient<IFactoryConnection, FactoryConnection>();
-            services.AddScoped<IInstructor, InstructorRepositorio>();
+            services.AddScoped<IInstructorRepository, InstructorRepositorio>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

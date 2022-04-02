@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.DapperConexion.Instructor
 {
-    public class InstructorRepositorio : IInstructor
+    public class InstructorRepositorio : IInstructorRepository
     {
         private readonly IFactoryConnection _factoryConnection;
         public InstructorRepositorio(IFactoryConnection factoryConnection)
@@ -16,14 +16,53 @@ namespace Persistence.DapperConexion.Instructor
             _factoryConnection = factoryConnection;
         }
 
-        public Task<int> Actualiza(InstructorModel instructor)
+        public async Task<int> Actualiza(Guid instructorId, string nombre, string apellido, string titulo)
         {
-            throw new NotImplementedException();
+            var storedProcedure = "usp_instructor_editar";
+            try
+            {
+                var connection = _factoryConnection.GetConnection();
+                var resultados = await connection.ExecuteAsync(storedProcedure,
+                    new
+                    {
+                        InstructorId = instructorId,
+                        Nombre = nombre,
+                        Apellido = apellido,
+                        Titulo = titulo
+                    },
+                    commandType: CommandType.StoredProcedure
+                    );
+
+                _factoryConnection.CloseConnection();
+                return resultados;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("No se pudo insertar la data del instructor", e);
+            }
         }
 
-        public Task<int> Elimina(Guid id)
+        public async Task<int> Elimina(Guid id)
         {
-            throw new NotImplementedException();
+            var storedProcedure = "usp_instructor_elimina";
+            try
+            {
+                var connection = _factoryConnection.GetConnection();
+                var resultado = await connection.ExecuteAsync(
+                    storedProcedure,
+                    new
+                    {
+                        InstructorId = id
+                    },
+                    commandType: CommandType.StoredProcedure
+                );
+                _factoryConnection.CloseConnection();
+                return resultado;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("No se pudo eliminar el instructor", e);
+            }
         }
 
         public async Task<int> Nuevo(string nombre, string apellido, string titulo)
@@ -37,7 +76,7 @@ namespace Persistence.DapperConexion.Instructor
                     InstructorId = Guid.NewGuid(),
                     Nombre = nombre,
                     Apellido = apellido,
-                    Titutlo = titulo
+                    Titulo = titulo
                 },
                 commandType: CommandType.StoredProcedure);
                 _factoryConnection.CloseConnection();
@@ -70,9 +109,27 @@ namespace Persistence.DapperConexion.Instructor
             return instructorList;
         }
 
-        public Task<InstructorModel> ObtenerPorId(Guid id)
+        public async Task<InstructorModel> ObtenerPorId(Guid id)
         {
-            throw new NotImplementedException();
+            var storedProcedure = "usp_obtener_instructor_por_id";
+            InstructorModel instructor = null;
+            try
+            {
+                var connection = _factoryConnection.GetConnection();
+                instructor = await connection.QueryFirstAsync<InstructorModel>(
+                    storedProcedure,
+                    new
+                    {
+                        Id = id
+                    },
+                    commandType: CommandType.StoredProcedure
+                );
+                return instructor;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("No se pudo encontrar el instructor", e);
+            }
         }
     }
 }

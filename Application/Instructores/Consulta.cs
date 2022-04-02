@@ -15,8 +15,8 @@ namespace Application.Instructores
 
         public class Manejador : IRequestHandler<Lista, List<InstructorModel>>
         {
-            private readonly IInstructor _instructorRepository;
-            public Manejador(IInstructor instructorRepository)
+            private readonly IInstructorRepository _instructorRepository;
+            public Manejador(IInstructorRepository instructorRepository)
             {
                 _instructorRepository = instructorRepository;
             }

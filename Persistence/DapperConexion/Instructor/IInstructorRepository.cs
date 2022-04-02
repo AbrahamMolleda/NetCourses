@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.DapperConexion.Instructor
 {
-    public interface IInstructor
+    public interface IInstructorRepository
     {
         Task<IEnumerable<InstructorModel>> ObtenerLista();
 
@@ -14,7 +14,7 @@ namespace Persistence.DapperConexion.Instructor
 
         Task<int> Nuevo(string nombre, string apellido, string titulo);
 
-        Task<int> Actualiza(InstructorModel instructor);
+        Task<int> Actualiza(Guid instructorId, string nombre, string apellido, string titulo);
 
         Task<int> Elimina(Guid id);
     }
