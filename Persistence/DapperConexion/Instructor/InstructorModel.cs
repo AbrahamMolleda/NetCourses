@@ -12,5 +12,6 @@ namespace Persistence.DapperConexion.Instructor
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Titulo { get; set; }
+        public DateTime? FechaCreacion { get; set; }
     }
 }

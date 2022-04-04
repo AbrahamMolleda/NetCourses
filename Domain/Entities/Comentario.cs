@@ -13,6 +13,7 @@ namespace Domain.Entities
         public int Puntaje { get; set; }
         public string ComentarioLista { get; set; }
         public Guid CursoId { get; set; }
+        public DateTime? FechaCreacion { get; set; }
         public Curso Curso { get; set; }
     }
 }
