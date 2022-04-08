@@ -20,6 +20,7 @@ using Microsoft.OpenApi.Models;
 using Persistence;
 using Persistence.DapperConexion;
 using Persistence.DapperConexion.Instructor;
+using Persistence.DapperConexion.Paginacion;
 using Seguridad.TokenSeguridad;
 using System.Text;
 using WebAPI.Middleware;
@@ -78,6 +79,7 @@ namespace WebAPI
             services.AddAutoMapper(typeof(Consulta.Manejador));
             services.AddTransient<IFactoryConnection, FactoryConnection>();
             services.AddScoped<IInstructorRepository, InstructorRepositorio>();
+            services.AddScoped<IPaginacionRepository, PaginacionRepositorio>();
 
             services.AddSwaggerGen(c =>
            {

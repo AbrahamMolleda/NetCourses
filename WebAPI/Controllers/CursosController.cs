@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.DapperConexion.Paginacion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,12 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<Unit>> Eliminar(Guid id)
         {
             return await Mediator.Send(new Eliminar.Ejecuta { Id = id });
+        }
+
+        [HttpPost("report")]
+        public async Task<ActionResult<PaginacionModel>> Report(PaginacionCursos.Ejecuta data)
+        {
+            return await Mediator.Send(data);
         }
 
     }
